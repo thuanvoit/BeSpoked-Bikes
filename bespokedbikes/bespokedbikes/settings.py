@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'product',
     'sales',
     'salesperson',
-    'bonus',
+    'discount',
     'bootstrap5',
     #
     'django.contrib.admin',
