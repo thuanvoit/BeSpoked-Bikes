@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,11 +33,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'core',
-    'customer',
-    'product',
-    'sales',
-    'salesperson',
-    'discount',
     'bootstrap5',
     #
     'django.contrib.admin',
@@ -113,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -122,6 +118,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 STATIC_URL = 'static/'
 

@@ -1,0 +1,40 @@
+{% extends "core/base.html" %} {% block content %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th scope="col">First name</th>
+      <th scope="col">Last name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Phone number</th>
+      <th scope="col">Start date</th>
+      <th scope="col">Termination date</th>
+      <th scope="col">Manager</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in data %}
+
+    <tr>
+      <td scope="row">{{ item.id }}</td>
+      <td>{{ item.first_name }}</td>
+      <td>{{ item.last_name }}</td>
+      <td>{{ item.address }}</td>
+      <td>{{ item.phone }}</td>
+      <td>{{ item.start_date }}</td>
+      <td>{{ item.termination_date }}</td>
+      <td>{{ item.manager }}</td>
+      <td>
+        <a href="{% url 'core:update_salesperson' item.id %}" class="btn btn-primary">Update</a>
+      </td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+<button type="button" class="btn btn-primary">Update</button>
+
+{% endblock %}

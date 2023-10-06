@@ -2,11 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from sales.models import Sale
-from customer.models import Customer
-from product.models import Product
-from salesperson.models import Salesperson
-from discount.models import Discount
+from .models import Sale, Customer, Product, Salesperson, Discount
 
 admin.site.register(Sale)
 admin.site.register(Customer)
