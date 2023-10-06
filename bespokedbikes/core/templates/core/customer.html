@@ -6,11 +6,8 @@
       <th scope="col">First name</th>
       <th scope="col">Last name</th>
       <th scope="col">Address</th>
-      <th scope="col">Phone number</th>
+      <th scope="col">Phone</th>
       <th scope="col">Start date</th>
-      <th scope="col">Termination date</th>
-      <th scope="col">Manager</th>
-      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -22,16 +19,11 @@
       <td>{{ item.address }}</td>
       <td>{{ item.phone }}</td>
       <td>{{ item.start_date }}</td>
-      <td>{{ item.termination_date }}</td>
-      <td>{{ item.manager }}</td>
-      <td>
-        <a href="{% url 'core:salesperson_update' item.id %}" class="btn btn-primary btn-sm">Update</a>
-      </td>
     </tr>
 
     {% endfor %}
   </tbody>
 </table>
-=
+
 
 {% endblock %}

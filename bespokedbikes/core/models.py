@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 
 class Customer(models.Model):
     first_name = models.CharField(max_length=50)
@@ -21,6 +22,7 @@ class Salesperson(models.Model):
     
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
+    
 
 class Product(models.Model):
     name = models.CharField(max_length=100, blank=False)

@@ -1,0 +1,41 @@
+{% extends "core/base.html" %} {% block content %}
+
+<form method="post" class="row g-3">
+  {% csrf_token %}
+  
+    <div class="col-12">
+      <label class="form-label">Name</label>
+      <input type="text" class="form-control" name="name" value="{{data.name}}">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Manufacturer</label>
+      <input type="text" class="form-control" name="manufacturer" value="{{data.manufacturer}}">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Style</label>
+      <input type="text" class="form-control" name="style" placeholder="1234 Main St" value="{{data.style}}">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Purchase price</label>
+      <input type="text" class="form-control" name="purchase_price" placeholder="" value="{{data.purchase_price}}">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Sale price</label>
+      <input type="text" class="form-control" name="sale_price" placeholder="" value="{{data.sale_price}}">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Qty on hand</label>
+      <input type="text" class="form-control" name="qty_on_hand" placeholder="" value="{{data.qty_on_hand}}">
+    </div>
+    <div class="col-12">
+      <label class="form-label">Commission percentage</label>
+      <input type="text" class="form-control" name="commission_percentage" placeholder="" value="{{data.commission_percentage}}">
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Update</button>
+      <button type="button" class="btn btn-secondary">Cancel</button>
+      <button type="clear" class="btn btn-danger">Clear</button>
+    </div>
+  </form>
+  
+  {% endblock %}
