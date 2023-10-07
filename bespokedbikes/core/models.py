@@ -23,11 +23,17 @@ class Salesperson(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
     
+    def clean(self):
+        super().clean()
+
+        if self.start_date and self.termination_date and self.start_date > self.termination_date:
+            raise ValidationError("Termination date must be later than the start date.")
+    
 
 class Product(models.Model):
     name = models.CharField(max_length=100, blank=False)
-    manufacturer = models.CharField(max_length=100)
-    style = models.CharField(max_length=50)
+    manufacturer = models.CharField(max_length=100, blank=False)
+    style = models.CharField(max_length=50, blank=False, default="Other")
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2)
     qty_on_hand = models.PositiveIntegerField()

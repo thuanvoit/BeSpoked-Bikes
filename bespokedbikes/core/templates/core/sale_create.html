@@ -2,53 +2,73 @@
 
 <form method="post" class="row g-3">
   {% csrf_token %}
-  
-    <div class="col-12">
-      <label class="form-label">Product</label>
-      <select class="form-select" name="product">
-        {% for product in products %}
-            <option value="{{ product.id }}">{{ product.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    
-    <div class="col-12">
-        <label class="form-label">Sales Person</label>
-        <select class="form-select" name="salesperson">
-          {% for person in salesperson %}
-              <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}, {{ person.phone }}</option>
-          {% endfor %}
-        </select>
-      </div>
 
-      <div class="col-12">
-        <label class="form-label">Customer</label>
-        <select class="form-select" name="customer">
-          {% for customer in customers %}
-              <option value="{{ customer.id }}">{{ customer.first_name }} {{ customer.last_name }}, {{ customer.phone }}</option>
-          {% endfor %}
-        </select>
-      </div>
+  <div class="col-12">
+    <label class="form-label">Product</label>
+    <select class="form-select" name="product">
+      {% for product in products %}
+      <option value="{{ product.id }}">{{ product.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-    <div class="col-12">
-      <label class="form-label">Sales Date</label>
-      <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date">
-    </div>
-    <div class="col-12">
-      <label class="form-label">Price</label>
-      <input type="number" class="form-control" name="price" placeholder="" value="">
-    </div>
-    <div class="col-12">
-      <label class="form-label">Salesperson Commission</label>
-      <input type="number" class="form-control" name="salesperson_commission" placeholder="" value="">
-    </div>
+  <div class="col-12">
+    <label class="form-label">Sales Person</label>
+    <select class="form-select" name="salesperson">
+      {% for person in salesperson %}
+      <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}, {{ person.phone }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">Save</button>
-      <button type="button" class="btn btn-secondary">Cancel</button>
-      <button type="clear" class="btn btn-danger">Clear</button>
-    </div>
+  <div class="col-12">
+    <label class="form-label">Customer</label>
+    <select class="form-select" name="customer">
+      {% for customer in customers %}
+      <option value="{{ customer.id }}">{{ customer.first_name }} {{ customer.last_name }}, {{ customer.phone }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
 
-  </form>
-  
-  {% endblock %}
+  <div class="col-12">
+    <label class="form-label">Sales Date</label>
+    <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date">
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Price</label>
+    <input type="number" class="form-control" name="price" placeholder="" value="" disabled readonly>
+  </div>
+  <div class="col-12">
+    <label class="form-label">Discount</label>
+    <input type="number" class="form-control" name="discount" placeholder="" value="" disabled readonly>
+  </div>
+  <div class="col-12">
+    <label class="form-label">Salesperson Commission</label>
+    <input type="number" class="form-control" name="salesperson_commission" placeholder="" value="" disabled readonly>
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary">Cancel</button>
+    <button type="clear" class="btn btn-danger">Clear</button>
+  </div>
+
+</form>
+
+<script>
+  function setToday() {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = (today.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-indexed, so add 1
+    var day = today.getDate().toString().padStart(2, "0");
+    var formattedDate = year + "-" + month + "-" + day;
+    document.getElementById("sales_date").value = formattedDate;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    setToday();
+  });
+</script>
+
+{% endblock %}

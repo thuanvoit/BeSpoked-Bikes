@@ -1,39 +1,73 @@
-{% extends "core/base.html" %} {% block content %}
+{% extends "core/base.html" %} 
+{% block content %}
 
 <form method="post" class="row g-3">
-{% csrf_token %}
+  {% csrf_token %}
 
   <div class="col-md-6">
     <label class="form-label">First name</label>
     <input type="text" class="form-control" name="first_name" value="{{data.first_name}}">
+    {% if form.errors.first_name %}
+    <span id="error-alert" class="text-danger">{{ form.errors.first_name.0 }}</span>
+    {% endif %}
   </div>
+  
   <div class="col-md-6">
     <label class="form-label">Last name</label>
     <input type="text" class="form-control" name="last_name" value="{{data.last_name}}">
+    {% if form.errors.last_name %}
+    <span id="error-alert" class="text-danger">{{ form.errors.last_name.0 }}</span>
+    {% endif %}
   </div>
+  
   <div class="col-12">
     <label class="form-label">Address</label>
     <input type="text" class="form-control" name="address" placeholder="1234 Main St" value="{{data.address}}">
+    {% if form.errors.address %}
+    <span id="error-alert" class="text-danger">{{ form.errors.address.0 }}</span>
+    {% endif %}
   </div>
+  
   <div class="col-12">
     <label class="form-label">Phone</label>
     <input type="text" class="form-control" name="phone" placeholder="" value="{{data.phone}}">
+    {% if form.errors.phone %}
+    <span id="error-alert" class="text-danger">{{ form.errors.phone.0 }}</span>
+    {% endif %}
   </div>
+  
   <div class="col-12">
     <label class="form-label">Start Date</label>
     <input type="date" class="form-control" name="start_date" placeholder="" {% if data.start_date %}
       value="{{ data.start_date|date:'Y-m-d' }}" {% endif %}>
+    {% if form.errors.start_date %}
+    <span id="error-alert" class="text-danger">{{ form.errors.start_date.0 }}</span>
+    {% endif %}
   </div>
+  
   <div class="col-12">
     <label class="form-label">Termination Date</label>
-    <input type="date" class="form-control" name="termination_date" placeholder=""
-    {% if data.termination_date %}
-    value="{{ data.termination_date|date:'Y-m-d' }}" {% endif %}>
+    <input type="date" class="form-control" name="termination_date" placeholder="" {% if data.termination_date %}
+      value="{{ data.termination_date|date:'Y-m-d' }}" {% endif %}>
+    {% if form.non_field_errors %}
+    <span id="error-alert" class="text-danger">
+        {% for error in form.non_field_errors %}
+        <span>{{ error.0 }}</span>
+        {% endfor %}
+    </span>
+    {% endif %}
   </div>
+  
   <div class="col-12">
-    <label class="form-label">Manager</label>
+    <label class="form-label">
+      Manager 
     <input type="text" class="form-control" name="manager" placeholder="" value="{{data.manager}}">
+    {% if form.errors.manager %}
+      <span id="error-alert" class="text-danger">{{ form.errors.manager.0 }}</span>
+      {% endif %}
+    </label>
   </div>
+  
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Update</button>
     <button type="button" class="btn btn-secondary">Cancel</button>

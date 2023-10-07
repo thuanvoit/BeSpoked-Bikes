@@ -1,4 +1,5 @@
 import json
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -9,16 +10,24 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Min, Max
 from .utils import *
 
-# Create your views here.
 def index(request):
-    # add_sample_data()
     return render(request, "core/base.html")
 
 def salesperson_view(request):
     data = Salesperson.objects.all()
+    if data:
+        error = ""
+        msg = "Retrieve data successfully"
+        status_code = 200
+    else:
+        error = "Error retrieve data"
+        msg = ""
+        status_code = 404
     return render(request, "core/salesperson.html", {
+        "error": error,
+        "msg": msg,
         "data": data,
-    })
+    }, status=status_code)
 
 def salesperson_update(request, id):
     salesperson_data = Salesperson.objects.get(id = id)
@@ -27,19 +36,29 @@ def salesperson_update(request, id):
         if form.is_valid():
             form.save()
             return redirect(reverse("core:salesperson"))
-        else:
-            # DO STUFF HERE
-            print("not valid")
+    else:
+        form = SalespersonForm(instance=salesperson_data)
         
     return render(request, "core/salesperson_update.html", {
+        "form": form,
         "data": salesperson_data,
     })
 
 def product_view(request):
     data = Product.objects.all()
+    if data:
+        error = ""
+        msg = "Retrieve data successfully"
+        status_code = 200
+    else:
+        error = "Error retrieve data"
+        msg = ""
+        status_code = 404
     return render(request, "core/product.html", {
+        "error": error,
+        "msg": msg,
         "data": data,
-    })
+    }, status=status_code)
 
 def product_update(request, id):
     product_data = Product.objects.get(id = id)
@@ -47,14 +66,16 @@ def product_update(request, id):
     if request.method == 'POST':
         form = ProductForm(request.POST, instance=product_data)
         if form.is_valid():
-            form.save()
-            return redirect(reverse("core:product"))
-        else:
-            # DO STUFF HERE
-            print("not valid")
-        
+            try:
+                form.save()
+                return redirect(reverse("core:product"))
+            except IntegrityError:
+                form.add_error(None, "Product with this name and manufacturer already exists.")
+    else:
+        form = ProductForm(instance=product_data)
         
     return render(request, "core/product_update.html", {
+        "form": form,
         "data": product_data,
     })
 
@@ -116,6 +137,7 @@ def create_sale(request):
 def discount_list(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
+        print(data)
     except json.JSONDecodeError as e:
             return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
