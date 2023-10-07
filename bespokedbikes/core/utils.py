@@ -1,7 +1,14 @@
 import datetime
 import random
+
+from django.db import connection
 from .models import *
 
+def execute_custom_query(query, params=None):
+    with connection.cursor() as cursor:
+        cursor.execute(query, params)
+        data = cursor.fetchall()
+    return data
 
 def format_date(date):
     from datetime import datetime
@@ -10,11 +17,12 @@ def format_date(date):
 
 
 def sale_calculate(price, discount_percentage, commission_percentage):
+    print(price, discount_percentage, commission_percentage)
     discount_price = round((price * discount_percentage / 100), 2)
     final_price = round(float(price) - float(discount_price), 2)
     commission = round((price * commission_percentage / 100), 2)
     return {
-        "sale_price": float(final_price),
+        "sale_price": float(price),
         "discount": float(discount_price),
         "commission": float(commission)
     }

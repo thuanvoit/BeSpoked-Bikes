@@ -23,7 +23,7 @@ async function getProductDetails(id) {
       },
       body: JSON.stringify({
         id: id,
-        sales_date: getToday(),
+        sale_date: getToday(),
       }),
     });
 

@@ -54,7 +54,7 @@ class Sale(models.Model):
     salesperson_commission = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self) -> str:
-        return f"{self.product.name} ${self.price} - Orig: ${self.product.sale_price} {'DISCOUNTED' if self.price == self.product.sale_price else ''}"
+        return f"{self.product.name} {self.sales_date} ${self.price} - Orig: ${self.product.sale_price} {'DISCOUNTED' if self.price == self.product.sale_price else ''}"
 
 class Discount(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

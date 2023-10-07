@@ -1,11 +1,14 @@
 {% extends "core/base.html" %} {% block content %}
 {% if form.non_field_errors %}
-<span id="error-alert">
+<span id="error-alert" class="text-danger">
   {% for error in form.non_field_errors %}
   <span>{{ error }}</span>
   {% endfor %}
 </span>
 {% endif %}
+
+<div class="col-5">
+
 <form method="post" class="row g-3">
   {% csrf_token %}
 
@@ -65,5 +68,7 @@
     <button type="clear" class="btn btn-danger">Clear</button>
   </div>
 </form>
+
+</div>
 
 {% endblock %}

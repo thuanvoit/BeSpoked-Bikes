@@ -21,7 +21,6 @@
   </div>
   <div class="col-sm-2">
     <button type="submit" class="btn btn-primary">Apply</button>
-    <button type="clear" class="btn btn-danger">Clear</button>
   </div>
 </form>
 
@@ -32,6 +31,7 @@
       <th scope="col">Sales Person</th>
       <th scope="col">Salesperson #</th>
       <th scope="col">Customer</th>
+      <th scope="col">Customer #</th>
       <th scope="col">Sales Date</th>
       <th scope="col">Price</th>
       <th scope="col">Commission</th>
@@ -40,15 +40,41 @@
   <tbody>
     {% for item in data %}
     <tr>
-      <td>{{ item.product.name }}</td>
-      <td>{{ item.salesperson.first_name }} {{ item.salesperson.last_name }}</td>
-      <td>{{ item.salesperson.phone }}</td>
-      <td>{{ item.customer.first_name }} {{ item.customer.last_name }}</td>
-      <td>{{ item.sales_date }}</td>
-      <td>{{ item.price }}</td>
-      <td>{{ item.salesperson_commission }}</td>
+      <td>{{ item.0 }}</td>
+      <td>{{ item.2 }}, {{ item.1 }}</td>
+      <td>{{ item.3 }}</td>
+      <td>{{ item.5 }}, {{ item.4 }}</td>
+      <td>{{ item.6 }}</td>
+      <td>{{ item.7 }}</td>
+      <td>{{ item.8 }}</td>
+      <td>{{ item.9 }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<nav>
+  <ul class="pagination justify-content-center">
+    {% if data.has_previous %}
+    <li class="page-item">
+      <a href="?page={{ data.previous_page_number }}" class="page-link">Previous</a>
+    </li>
+    {% endif %}
+
+    {% for i in data.paginator.page_range %}
+      {% if data.number == i %}
+      <li class="page-item active"><a class="page-link" href="">{{ i }}</a></li>
+
+      {% else %}
+      <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if data.has_next %}
+      <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+    {% endif %}
+  </ul>
+</nav>
+
+
 {% endblock %}

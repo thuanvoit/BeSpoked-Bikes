@@ -65,6 +65,11 @@ def salesperson_update(request, id):
 
 def product_view(request):
     data = Product.objects.all()
+    
+    paginator = Paginator(data, 50)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    
     if data:
         error = ""
         msg = "Retrieve data successfully"
@@ -76,7 +81,7 @@ def product_view(request):
     return render(request, "core/product.html", {
         "error": error,
         "msg": msg,
-        "data": data,
+        "data": page,
         "apps_link": get_apps_link()
     }, status=status_code)
 
@@ -105,32 +110,83 @@ def product_update(request, id):
 
 def customer_view(request):
     data = Customer.objects.all()
+    paginator = Paginator(data, 50)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     return render(request, "core/customer.html", {
-        "data": data,
+        "data": page,
         "apps_link": get_apps_link()
     })
 
 
 def sale_view(request):
-    data = Sale.objects.all()
-
+    query = """
+                SELECT 	p.name as product_name, 
+                        sp.first_name as sp_first_name, 
+                        sp.last_name as sp_last_name, 
+                        sp.phone as sp_phone, 
+                        c.first_name as c_first_name, 
+                        c.last_name as c_last_name, 
+                        c.phone as c_phone,
+                        s.sales_date, 
+                        s.price, 
+                        s.salesperson_commission 
+                FROM core_sale as s
+                LEFT JOIN core_product as p
+                ON s.product_id = p.id
+                LEFT join core_salesperson as sp
+                on s.salesperson_id = sp.id
+                LEFT join core_customer as c
+                on s.customer_id = c.id;
+            """
+    data = execute_custom_query(query)
+        
     oldest_date = format_date(Sale.objects.aggregate(
         oldest_date=Min('sales_date'))['oldest_date'])
     nearest_date = format_date(Sale.objects.aggregate(
         nearest_date=Max('sales_date'))['nearest_date'])
-
+    
+    
     start_date = oldest_date
     end_date = nearest_date
 
     if request.method == 'POST':
+        
+        query = """
+                SELECT 	p.name as product_name, 
+                        sp.first_name as sp_first_name, 
+                        sp.last_name as sp_last_name, 
+                        sp.phone as sp_phone, 
+                        c.first_name as c_first_name, 
+                        c.last_name as c_last_name, 
+                        c.phone as c_phone,
+                        s.sales_date, 
+                        s.price, 
+                        s.salesperson_commission 
+                FROM core_sale as s
+                LEFT JOIN core_product as p
+                ON s.product_id = p.id
+                LEFT join core_salesperson as sp
+                on s.salesperson_id = sp.id
+                LEFT join core_customer as c
+                on s.customer_id = c.id
+                where %s <= s.sales_date 
+                and s.sales_date <= %s;
+            """
+        
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
-        data = Sale.objects.filter(
-            sales_date__gte=start_date, sales_date__lte=end_date)
+        data = execute_custom_query(query, [start_date, end_date])
 
+    paginator = Paginator(data, 50)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    
+    print(data)
+    
     return render(request, "core/sale.html", {
         "apps_link": get_apps_link(),
-        "data": data,
+        "data": page,
         "start_date": start_date,
         "end_date": end_date,
         "oldest_date": oldest_date,
@@ -195,50 +251,38 @@ def sale_report(request):
     if request.method == 'POST':
         year = int(request.POST.get('year'))
         quarter = int(request.POST.get('quarter'))
-
+        
         print(year, quarter)
-
-        if quarter == 1:
-            start_month = 1
-            end_month = 3
-            end_date = 31
-        elif quarter == 2:
-            start_month = 4
-            end_month = 6
-            end_date = 30
-        elif quarter == 3:
-            start_month = 7
-            end_month = 9
-            end_date = 30
-        elif quarter == 4:
-            start_month = 10
-            end_month = 12
-            end_date = 31
 
         query = """
             SELECT sp.id AS salesperson_id, sp.first_name, sp.last_name, 
                 sp.phone as phone, ROUND(SUM(s.price)) AS revenue, 
                 ROUND(SUM(s.salesperson_commission), 2) AS commission, 
-                COUNT(s.product_id) AS total_product, s.sales_date
+                COUNT(s.product_id) AS total_product, s.sales_date, 
+                (cast(strftime('%%m', s.sales_date) as integer) + 2) / 3 as quarter,
+                (cast(strftime('%%Y', s.sales_date) as integer)) as year
+                
             FROM core_salesperson AS sp 
             LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
-            WHERE s.sales_date >= %s AND s.sales_date <= %s
+            
+            WHERE year = %s AND quarter = %s
             GROUP BY sp.id;
         """
 
-        # Define the date range
-        start_date = f"{year}-{start_month}-01"
-        end_date = f"{year}-{end_month}-{end_date}"
-
         # Execute the raw SQL query
         with connection.cursor() as cursor:
-            cursor.execute(query, [start_date, end_date])
+            cursor.execute(query, [year, quarter])
             stats = cursor.fetchall()
+            cursor.close()
 
+    paginator = Paginator(stats, 50)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    
     return render(request, "core/sale_report.html", {
         "apps_link": get_apps_link(),
         "year_range": range(min_year, max_year + 1),
-        "stats": stats
+        "stats": page
     })
 
 

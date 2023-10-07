@@ -52,7 +52,7 @@
     {% if form.non_field_errors %}
     <span id="error-alert" class="text-danger">
       {% for error in form.non_field_errors %}
-      <span>{{ error.0 }}</span>
+      <span>{{ error }}</span>
       {% endfor %}
     </span>
     {% endif %}
