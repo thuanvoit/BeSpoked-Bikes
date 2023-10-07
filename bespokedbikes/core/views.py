@@ -1,11 +1,16 @@
 import json
-from django.db import IntegrityError
-from django.http import HttpResponseRedirect, JsonResponse
+from django.db import IntegrityError, connection
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
 from .forms import *
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from django.db.models.functions import ExtractYear, ExtractMonth
+from django.db.models import Sum, Count
+
 
 from django.db.models import Min, Max
 from .utils import *
@@ -117,27 +122,129 @@ def create_sale(request):
         salesperson = Salesperson.objects.get(id = request.POST.get('salesperson'))
         customer = Customer.objects.get(id = request.POST.get('customer'))
         sales_date = format_date(request.POST.get('sales_date'))
-        price = request.POST.get('price')
-        salesperson_commission = request.POST.get('salesperson_commission')
+        
+        discounts = Discount.objects.filter(
+            product=product,
+            begin_date__lte=sales_date,
+            end_date__gte=sales_date,
+        )
+        max_discount = discounts.order_by('-discount_percentage').first()
+        
+        if discounts:
+            product_price = sale_calculate(product.sale_price,
+                    max_discount.discount_percentage,
+                    product.commission_percentage)
+        else:
+            product_price = sale_calculate(product.sale_price,
+                    0,
+                    product.commission_percentage)
         
         new_sale = Sale(product=product,
                         salesperson=salesperson,
                         customer=customer,
                         sales_date=sales_date,
-                        price=price,
-                        salesperson_commission=salesperson_commission)
+                        price=product_price["sale_price"],
+                        salesperson_commission=product_price["commission"])
         new_sale.save()
+        return redirect(reverse("core:sale"))
     
     return render(request, "core/sale_create.html", {
         "products": products,
         "salesperson": salespersons,
         "customers": customers,
     })
+
+def sale_report(request):
+    stats = []
     
-def discount_list(request):
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-        print(data)
-    except json.JSONDecodeError as e:
-            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-    return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
+    year_range_query = Sale.objects.aggregate(min_year=Min(ExtractYear('sales_date')), 
+                                              max_year=Max(ExtractYear('sales_date')))
+
+    min_year = year_range_query['min_year']
+    max_year = year_range_query['max_year']
+    
+    if request.method == 'POST':
+        year = int(request.POST.get('year'))
+        quarter = int(request.POST.get('quarter'))
+        
+        print(year, quarter)
+        
+        if quarter == 1:
+            start_month = 1
+            end_month = 3
+            end_date = 31
+        elif quarter == 2:
+            start_month = 4
+            end_month = 6
+            end_date = 30
+        elif quarter == 3:
+            start_month = 7
+            end_month = 9
+            end_date = 30
+        elif quarter == 4:
+            start_month = 10
+            end_month = 12
+            end_date = 31
+        
+        query = """
+            SELECT sp.id AS salesperson_id, sp.first_name, sp.last_name, 
+                sp.phone as phone, ROUND(SUM(s.price)) AS revenue, 
+                ROUND(SUM(s.salesperson_commission), 2) AS commission, 
+                COUNT(s.product_id) AS total_product, s.sales_date
+            FROM core_salesperson AS sp 
+            RIGHT JOIN core_sale AS s ON s.salesperson_id = sp.id
+            WHERE s.sales_date >= %s AND s.sales_date <= %s
+            GROUP BY sp.id;
+        """
+
+        # Define the date range
+        start_date = f"{year}-{start_month}-01"
+        end_date = f"{year}-{end_month}-{end_date}"
+
+        # Execute the raw SQL query
+        with connection.cursor() as cursor:
+            cursor.execute(query, [start_date, end_date])
+            stats = cursor.fetchall()
+        
+    
+    return render(request, "core/sale_report.html", {
+        "year_range": range(min_year, max_year+ 1),
+        "stats": stats
+    })
+
+def seed_sample(request):
+    clean_data()
+    add_sample_data()
+    return HttpResponse("Feed data successfully.")
+
+@csrf_exempt
+def product_details(request):
+    if request.method == 'POST':
+        raw_data = request.body
+        data_str = raw_data.decode('utf-8')
+        data = json.loads(data_str)
+        sales_date = data['sale_date']
+        product = Product.objects.get(id = data['id'])
+        
+        discounts = Discount.objects.filter(
+            product=product,
+            begin_date__lte=sales_date,
+            end_date__gte=sales_date,
+        )
+        max_discount = discounts.order_by('-discount_percentage').first()
+
+        if discounts:
+            product_price = sale_calculate(product.sale_price,
+                    max_discount.discount_percentage,
+                    product.commission_percentage)
+        else:
+            product_price = sale_calculate(product.sale_price,
+                    0,
+                    product.commission_percentage)
+        
+        return JsonResponse(product_price, status=200, safe=False)
+    else:
+        return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
+    
+    
+    

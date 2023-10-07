@@ -1,11 +1,12 @@
 {% extends "core/base.html" %} {% block content %}
+{% load static %}
 
 <form method="post" class="row g-3">
   {% csrf_token %}
 
   <div class="col-12">
     <label class="form-label">Product</label>
-    <select class="form-select" name="product">
+    <select class="form-select" name="product" id="product-select">
       {% for product in products %}
       <option value="{{ product.id }}">{{ product.name }}</option>
       {% endfor %}
@@ -33,7 +34,7 @@
 
   <div class="col-12">
     <label class="form-label">Sales Date</label>
-    <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date">
+    <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date" disabled readonly>
   </div>
 
   <div class="col-12">
@@ -57,18 +58,6 @@
 
 </form>
 
-<script>
-  function setToday() {
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = (today.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-indexed, so add 1
-    var day = today.getDate().toString().padStart(2, "0");
-    var formattedDate = year + "-" + month + "-" + day;
-    document.getElementById("sales_date").value = formattedDate;
-  }
-  document.addEventListener("DOMContentLoaded", function () {
-    setToday();
-  });
-</script>
+<script src="{% static 'core/js/create_sale.js' %}"></script>
 
 {% endblock %}

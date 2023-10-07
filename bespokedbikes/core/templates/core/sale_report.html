@@ -1,0 +1,65 @@
+{% extends "core/base.html" %} {% block content %}
+{% load static %}
+
+<form method="post" class="row g-3">
+  {% csrf_token %}
+
+  <div class="col-2">
+    <label class="form-label">Year</label>
+    <select class="form-select" name="year">
+      {% for year in year_range %}
+      <option value="{{ year }}">{{ year }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-2">
+    <label class="form-label">Quarter</label>
+    <select class="form-select" name="quarter">
+      <option value="1">Q1</option>
+      <option value="2">Q2</option>
+      <option value="3">Q3</option>
+      <option value="4">Q4</option>
+    </select>
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Apply</button>
+    <button type="clear" class="btn btn-danger">Clear</button>
+  </div>
+
+</form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Salesperson Id</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Revenue Price</th>
+      <th scope="col">Commission</th>
+      <th scope="col">Total Product</th>
+      <th scope="col">Sale Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in stats %}
+    <tr>
+      <td>{{ item.0 }}</td>
+      <td>{{ item.1 }}</td>
+      <td>{{ item.2 }}</td>
+      <td>{{ item.3 }}</td>
+      <td>{{ item.4 }}</td>
+      <td>{{ item.5 }}</td>
+      <td>{{ item.6 }}</td>
+      <td>{{ item.7 }}</td>
+      <td>{{ item.8 }}</td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

@@ -17,5 +17,16 @@ urlpatterns = [
     path('sale/', views.sale_view, name='sale'),
     # sales create
     path('sale/new', views.create_sale, name="new_sale"),
+    # quarterly report
+    path('sale_report/', views.sale_report, name="sale_report"),
+    
+    
+    #
+    # REST API
+    path('api/product-details/', views.product_details, name="product_details"),
+    
+    # samples
+    path('seed_sample/', views.seed_sample, name="seed_sample"),
+    
     
 ]

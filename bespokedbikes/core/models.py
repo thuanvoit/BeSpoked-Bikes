@@ -43,7 +43,7 @@ class Product(models.Model):
         unique_together = ('name', 'manufacturer')
 
     def __str__(self):
-        return f"{self.name} by {self.manufacturer}"
+        return f"{self.name} by {self.manufacturer} ${self.sale_price}"
 
 class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -54,7 +54,7 @@ class Sale(models.Model):
     salesperson_commission = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self) -> str:
-        return f"{self.salesperson.first_name} sold {self.product.name} to {self.customer.first_name} on {self.sales_date}"
+        return f"{self.product.name} ${self.price} - Orig: ${self.product.sale_price} {'DISCOUNTED' if self.price == self.product.sale_price else ''}"
 
 class Discount(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -63,4 +63,4 @@ class Discount(models.Model):
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     
     def __str__(self):
-        return f"{self.discount_percentage}"
+        return f"{self.product.name} by {self.product.manufacturer} - {self.discount_percentage}"

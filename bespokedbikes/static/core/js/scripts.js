@@ -1,6 +1,8 @@
 setTimeout(function () {
-  var errorAlert = document.getElementById("error-alert");
-  if (errorAlert) {
-    errorAlert.style.display = "none"; // Hide the alert
+  var errorAlert = document.querySelectorAll("#error-alert");
+  for (let i = 0; i < errorAlert.length; i++) {
+    if (errorAlert[i]) {
+        errorAlert[i].style.display = "none";
+      }
   }
-}, 2000);
+}, 5000);
