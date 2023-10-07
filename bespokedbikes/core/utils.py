@@ -17,6 +17,17 @@ def sale_calculate(price, discount_percentage, commission_percentage):
         "commission": float(commission)
     }
     
+def get_apps_link():
+    apps_link = [
+        {"app_name": "Salesperson", "app_link": "core:salesperson", "app_info": "View all salespersons"},
+        {"app_name": "Product", "app_link": "core:product", "app_info": "View all products"},
+        {"app_name": "Customer", "app_link": "core:customer", "app_info": "View all customers"},
+        {"app_name": "Sales", "app_link": "core:sale", "app_info": "View all sales"},
+        {"app_name": "New Sale", "app_link": "core:new_sale", "app_info": "Make new sales"},
+        {"app_name": "Sale Report", "app_link": "core:sale_report", "app_info": "Quarterly report"},
+    ]
+    return apps_link
+    
 def clean_data():
     customer = Customer.objects.all()
     customer.delete()

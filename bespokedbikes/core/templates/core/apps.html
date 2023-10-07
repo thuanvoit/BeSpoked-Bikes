@@ -1,0 +1,18 @@
+{% extends "core/base.html" %} {% block content %}
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    
+    {% for app in apps_link %}
+    
+    <div class="col">
+        <a href="{% url app.app_link %}" class="card text-bg-dark image-container shadow border-0 ">
+            <div class="card-img-overlay">
+              <h3 class="card-title">{{ app.app_name }}</h3>
+              <p class="card-text">{{ app.app_info }}</p>
+            </div>
+          </a>
+    </div>
+    
+    {% endfor %}
+    
+</div>
+{% endblock %}
