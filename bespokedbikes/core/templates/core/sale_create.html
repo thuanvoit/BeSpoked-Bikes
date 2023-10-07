@@ -14,7 +14,7 @@
     
     <div class="col-12">
         <label class="form-label">Sales Person</label>
-        <select class="form-select" name=-"salesperson">
+        <select class="form-select" name="salesperson">
           {% for person in salesperson %}
               <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}, {{ person.phone }}</option>
           {% endfor %}
@@ -25,14 +25,14 @@
         <label class="form-label">Customer</label>
         <select class="form-select" name="customer">
           {% for customer in customers %}
-              <option value="{{ person.iπd }}">{{ customer.first_name }} {{ customer.last_name }}, {{ customer.phone }}</option>
+              <option value="{{ customer.id }}">{{ customer.first_name }} {{ customer.last_name }}, {{ customer.phone }}</option>
           {% endfor %}
         </select>
       </div>
 
     <div class="col-12">
       <label class="form-label">Sales Date</label>
-      <input type="date" class="form-control" name="sales_date" placeholder="" value="">
+      <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date">
     </div>
     <div class="col-12">
       <label class="form-label">Price</label>
@@ -42,7 +42,7 @@
       <label class="form-label">Salesperson Commission</label>
       <input type="number" class="form-control" name="salesperson_commission" placeholder="" value="">
     </div>
-    
+
     <div class="col-12">
       <button type="submit" class="btn btn-primary">Update</button>
       <button type="button" class="btn btn-secondary">Cancel</button>

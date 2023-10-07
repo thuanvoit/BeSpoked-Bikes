@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect
+import json
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
@@ -86,11 +87,29 @@ def sale_view(request):
 
 def create_sale(request):
     products = Product.objects.all()
-    salesperson = Salesperson.objects.all()
+    salespersons = Salesperson.objects.all()
     customers = Customer.objects.all()
+    
+    if request.method == 'POST':
+        product = Product.objects.get(id = request.POST.get('product'))
+        salesperson = Salesperson.objects.get(id = request.POST.get('salesperson'))
+        customer = Customer.objects.get(id = request.POST.get('customer'))
+        sales_date = format_date(request.POST.get('sales_date'))
+        price = request.POST.get('price')
+        salesperson_commission = request.POST.get('salesperson_commission')
+        print(product, salesperson, customer, sales_date, price, salesperson_commission)
+        new_sale = Sale(product,salesperson,customer,sales_date,price,salesperson_commission)
+        new_sale.save()
     
     return render(request, "core/sale_create.html", {
         "products": products,
-        "salesperson": salesperson,
+        "salesperson": salespersons,
         "customers": customers,
     })
+    
+def discount_list(request):
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
