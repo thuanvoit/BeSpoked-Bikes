@@ -33,12 +33,12 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Salesperson Id</th>
+      {% comment %} <th scope="col">Salesperson Id</th> {% endcomment %}
       <th scope="col">First Name</th>
       <th scope="col">Last Name</th>
       <th scope="col">Phone</th>
-      <th scope="col">Revenue Price</th>
-      <th scope="col">Commission</th>
+      <th scope="col">Revenue Price ($)</th>
+      <th scope="col">Commission ($)</th>
       <th scope="col">Total Product</th>
       <th scope="col">Sale Date</th>
     </tr>
@@ -46,7 +46,7 @@
   <tbody>
     {% for item in stats %}
     <tr>
-      <td>{{ item.0 }}</td>
+      {% comment %} <td>{{ item.0 }}</td> {% endcomment %}
       <td>{{ item.1 }}</td>
       <td>{{ item.2 }}</td>
       <td>{{ item.3 }}</td>

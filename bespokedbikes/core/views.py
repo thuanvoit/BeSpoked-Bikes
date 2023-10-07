@@ -192,7 +192,7 @@ def sale_report(request):
                 ROUND(SUM(s.salesperson_commission), 2) AS commission, 
                 COUNT(s.product_id) AS total_product, s.sales_date
             FROM core_salesperson AS sp 
-            RIGHT JOIN core_sale AS s ON s.salesperson_id = sp.id
+            LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
             WHERE s.sales_date >= %s AND s.sales_date <= %s
             GROUP BY sp.id;
         """
