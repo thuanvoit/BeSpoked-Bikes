@@ -13,6 +13,9 @@ urlpatterns = [
     path('product/update/<str:id>', views.product_update, name="product_update"),
     # customer
     path('customer/', views.customer_view, name='customer'),
-    
+    # sales
+    path('sale/', views.sale_view, name='sale'),
+    # sales create
+    path('sale/new', views.create_sale, name="new_sale"),
     
 ]

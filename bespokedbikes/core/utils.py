@@ -1,5 +1,10 @@
 from .models import *
 
+def format_date(date):
+    from datetime import datetime
+    input_date = datetime.strptime(str(date), "%Y-%m-%d")
+    return input_date.strftime("%Y-%m-%d")
+
 def add_sample_data():
     from datetime import date
 

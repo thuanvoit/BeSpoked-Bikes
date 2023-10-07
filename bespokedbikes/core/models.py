@@ -48,7 +48,7 @@ class Sale(models.Model):
     salesperson_commission = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self) -> str:
-        return f"{self.salesperson.first_name} sold {self.product.name} to {self.customer.first_name}"
+        return f"{self.salesperson.first_name} sold {self.product.name} to {self.customer.first_name} on {self.sales_date}"
 
 class Discount(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %} {% block content %}
+
+<h3>Filter</h3>
+
+  <form method="POST" class="row g-3">
+    {% csrf_token %}
+    <div class="col-2">
+      <label class="form-label">Start Date</label>
+      <input name="start_date" class="form-control" type="date" 
+
+      {% if start_date %}
+        value = {{ start_date }}
+      {% elif oldest_date %}
+        value = {{ oldest_date }}
+      {% endif %}
+
+      {% if oldest_date %}
+        min = {{ oldest_date }}
+      {% endif %}
+      {% if nearest_date %}
+        max = {{ nearest_date }}
+      {% endif %}
+
+      />
+
+    </div>
+    <div class="col-2">
+      <label class="form-label">End Date</label>
+      <input name="end_date" class="form-control" type="date" 
+      
+      {% if end_date %}
+        value = {{ end_date }}
+      {% elif nearest_date %}
+        value = {{ nearest_date }}
+      {% endif %}
+
+      {% if oldest_date %}
+        min = {{ oldest_date }}
+      {% endif %}
+      {% if nearest_date %}
+        max = {{ nearest_date }}
+      {% endif %}
+
+      />
+
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Apply</button>
+      <button type="clear" class="btn btn-danger">Clear</button>
+    </div>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Product</th>
+        <th scope="col">Sales Person</th>
+        <th scope="col">Customer</th>
+        <th scope="col">Sales Date</th>
+        <th scope="col">Price</th>
+        <th scope="col">Commission</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.salesperson.first_name }} {{ item.salesperson.last_name }}</td>
+          <td>{{ item.customer.first_name }} {{ item.customer.last_name }}</td>
+          <td>{{ item.sales_date }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.salesperson_commission }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

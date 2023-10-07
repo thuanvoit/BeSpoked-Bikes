@@ -4,6 +4,9 @@ from django.urls import reverse
 from .models import *
 from .forms import *
 
+from django.db.models import Min, Max
+from .utils import *
+
 # Create your views here.
 def index(request):
     # add_sample_data()
@@ -57,4 +60,37 @@ def customer_view(request):
     data = Customer.objects.all()
     return render(request, "core/customer.html", {
         "data": data,
+    })
+
+def sale_view(request):
+    data = Sale.objects.all()
+    
+    oldest_date = format_date(Sale.objects.aggregate(oldest_date=Min('sales_date'))['oldest_date'])
+    nearest_date = format_date(Sale.objects.aggregate(nearest_date=Max('sales_date'))['nearest_date'])
+    
+    start_date = oldest_date
+    end_date = nearest_date
+    
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        data = Sale.objects.filter(sales_date__gte=start_date, sales_date__lte=end_date)
+        
+    return render(request, "core/sale.html", {
+        "data": data,
+        "start_date": start_date,
+        "end_date": end_date,
+        "oldest_date": oldest_date,
+        "nearest_date": nearest_date
+    })
+
+def create_sale(request):
+    products = Product.objects.all()
+    salesperson = Salesperson.objects.all()
+    customers = Customer.objects.all()
+    
+    return render(request, "core/sale_create.html", {
+        "products": products,
+        "salesperson": salesperson,
+        "customers": customers,
     })
