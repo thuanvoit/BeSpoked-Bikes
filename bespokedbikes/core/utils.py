@@ -12,6 +12,7 @@ def execute_custom_query(query, params=None):
 
 def format_date(date):
     from datetime import datetime
+    print(date)
     input_date = datetime.strptime(str(date), "%Y-%m-%d")
     return input_date.strftime("%Y-%m-%d")
 
@@ -22,7 +23,7 @@ def sale_calculate(price, discount_percentage, commission_percentage):
     final_price = round(float(price) - float(discount_price), 2)
     commission = round((price * commission_percentage / 100), 2)
     return {
-        "sale_price": float(price),
+        "sale_price": float(final_price),
         "discount": float(discount_price),
         "commission": float(commission)
     }

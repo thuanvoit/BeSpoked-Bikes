@@ -24,6 +24,9 @@ urlpatterns = [
     #
     # REST API
     path('api/product-details/', views.product_details, name="product_details"),
+    path('api/saler-details/', views.saler_details, name="saler_details"),
+    path('api/customer-details/', views.customer_details, name="customer_details"),
+
     
     # samples
     path('seed_sample/', views.seed_sample, name="seed_sample"),

@@ -15,7 +15,7 @@
 
   <div class="col-12">
     <label class="form-label">Sales Person</label>
-    <select class="form-select" name="salesperson">
+    <select class="form-select" name="salesperson" id="salesperson">
       {% for person in salesperson %}
       <option value="{{ person.id }}">{{ person.first_name }} {{ person.last_name }}, {{ person.phone }}</option>
       {% endfor %}
@@ -24,9 +24,9 @@
 
   <div class="col-12">
     <label class="form-label">Customer</label>
-    <select class="form-select" name="customer">
+    <select class="form-select" name="customer" id="customer">
       {% for customer in customers %}
-      <option value="{{ customer.id }}">{{ customer.first_name }} {{ customer.last_name }}, {{ customer.phone }}
+      <option value="{{ customer.id }}">{{ customer.last_name }}, {{ customer.first_name }} - {{ customer.phone }}
       </option>
       {% endfor %}
     </select>
@@ -34,26 +34,24 @@
 
   <div class="col-12">
     <label class="form-label">Sales Date</label>
-    <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date" disabled readonly>
+    <input type="date" class="form-control" name="sales_date" placeholder="" value="" id="sales_date" >
   </div>
 
   <div class="col-12">
-    <label class="form-label">Price</label>
+    <label class="form-label">Price $ (After Discount)</label>
     <input type="number" class="form-control" name="price" placeholder="" value="" disabled readonly>
   </div>
   <div class="col-12">
-    <label class="form-label">Discount</label>
+    <label class="form-label">Discount ($)</label>
     <input type="number" class="form-control" name="discount" placeholder="" value="" disabled readonly>
   </div>
   <div class="col-12">
-    <label class="form-label">Salesperson Commission</label>
+    <label class="form-label">Salesperson Commission ($)</label>
     <input type="number" class="form-control" name="salesperson_commission" placeholder="" value="" disabled readonly>
   </div>
 
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Save</button>
-    <button type="button" class="btn btn-secondary">Cancel</button>
-    <button type="clear" class="btn btn-danger">Clear</button>
   </div>
 
 </form>

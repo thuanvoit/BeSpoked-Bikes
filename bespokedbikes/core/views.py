@@ -11,7 +11,7 @@ from datetime import datetime
 from django.db.models.functions import ExtractYear, ExtractMonth
 from django.db.models import Sum, Count
 from django.core.paginator import Paginator
-
+from .query import *
 
 from django.db.models import Min, Max
 from .utils import *
@@ -28,7 +28,6 @@ def salesperson_view(request):
     paginator = Paginator(data, 50)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-
 
     if data:
         error = ""
@@ -120,69 +119,26 @@ def customer_view(request):
 
 
 def sale_view(request):
-    query = """
-                SELECT 	p.name as product_name, 
-                        sp.first_name as sp_first_name, 
-                        sp.last_name as sp_last_name, 
-                        sp.phone as sp_phone, 
-                        c.first_name as c_first_name, 
-                        c.last_name as c_last_name, 
-                        c.phone as c_phone,
-                        s.sales_date, 
-                        s.price, 
-                        s.salesperson_commission 
-                FROM core_sale as s
-                LEFT JOIN core_product as p
-                ON s.product_id = p.id
-                LEFT join core_salesperson as sp
-                on s.salesperson_id = sp.id
-                LEFT join core_customer as c
-                on s.customer_id = c.id;
-            """
-    data = execute_custom_query(query)
+    data = execute_custom_query(query_all_sales)
         
     oldest_date = format_date(Sale.objects.aggregate(
         oldest_date=Min('sales_date'))['oldest_date'])
     nearest_date = format_date(Sale.objects.aggregate(
         nearest_date=Max('sales_date'))['nearest_date'])
     
-    
     start_date = oldest_date
     end_date = nearest_date
 
     if request.method == 'POST':
         
-        query = """
-                SELECT 	p.name as product_name, 
-                        sp.first_name as sp_first_name, 
-                        sp.last_name as sp_last_name, 
-                        sp.phone as sp_phone, 
-                        c.first_name as c_first_name, 
-                        c.last_name as c_last_name, 
-                        c.phone as c_phone,
-                        s.sales_date, 
-                        s.price, 
-                        s.salesperson_commission 
-                FROM core_sale as s
-                LEFT JOIN core_product as p
-                ON s.product_id = p.id
-                LEFT join core_salesperson as sp
-                on s.salesperson_id = sp.id
-                LEFT join core_customer as c
-                on s.customer_id = c.id
-                where %s <= s.sales_date 
-                and s.sales_date <= %s;
-            """
-        
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
-        data = execute_custom_query(query, [start_date, end_date])
+        data = execute_custom_query(query_sale_by_date_range, 
+                                    [start_date, end_date])
 
     paginator = Paginator(data, 50)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    
-    print(data)
     
     return render(request, "core/sale.html", {
         "apps_link": get_apps_link(),
@@ -195,17 +151,17 @@ def sale_view(request):
 
 
 def create_sale(request):
-    products = Product.objects.all()
-    salespersons = Salesperson.objects.all()
-    customers = Customer.objects.all()
+    products = Product.objects.filter(qty_on_hand__gt=0)
+    salespersons = []
+    customers = []
 
     if request.method == 'POST':
+        print(request.POST)
         product = Product.objects.get(id=request.POST.get('product'))
-        salesperson = Salesperson.objects.get(
-            id=request.POST.get('salesperson'))
+        salesperson = Salesperson.objects.get(id=request.POST.get('salesperson'))
         customer = Customer.objects.get(id=request.POST.get('customer'))
         sales_date = format_date(request.POST.get('sales_date'))
-
+       
         discounts = Discount.objects.filter(
             product=product,
             begin_date__lte=sales_date,
@@ -228,7 +184,15 @@ def create_sale(request):
                         sales_date=sales_date,
                         price=product_price["sale_price"],
                         salesperson_commission=product_price["commission"])
+        
         new_sale.save()
+        
+        qty = int(product.qty_on_hand)
+        print(product.qty_on_hand)
+        product.qty_on_hand = qty - 1
+        print(product.qty_on_hand)
+        product.save()
+            
         return redirect(reverse("core:sale"))
 
     return render(request, "core/sale_create.html", {
@@ -291,7 +255,32 @@ def seed_sample(request):
     add_sample_data()
     return HttpResponse("Feed data successfully.")
 
+@csrf_exempt
+def saler_details(request):
+    if request.method == 'POST':
+        raw_data = request.body
+        data_str = raw_data.decode('utf-8')
+        data = json.loads(data_str)
+        sales_date = data['sale_date']
+        data = execute_custom_query(query_saler_by_sale_date, 
+                                    [sales_date, sales_date])
+        return JsonResponse(data, status=200, safe=False)
+    else:
+        return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
 
+@csrf_exempt
+def customer_details(request):
+    if request.method == 'POST':
+        raw_data = request.body
+        data_str = raw_data.decode('utf-8')
+        data = json.loads(data_str)
+        sales_date = data['sale_date']
+        data = execute_custom_query(query_customer_by_sale_date, 
+                                    [sales_date])
+        return JsonResponse(data, status=200, safe=False)
+    else:
+        return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
+  
 @csrf_exempt
 def product_details(request):
     if request.method == 'POST':
@@ -299,6 +288,9 @@ def product_details(request):
         data_str = raw_data.decode('utf-8')
         data = json.loads(data_str)
         sales_date = data['sale_date']
+        
+        print(sales_date, data['id'])
+        
         product = Product.objects.get(id=data['id'])
 
         discounts = Discount.objects.filter(
