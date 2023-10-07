@@ -12,11 +12,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
+
         {% for app in apps_link %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url app.app_link %}">{{ app.app_name }}</a>
+          <a class="nav-link {% if request.resolver_match.url_name|lower == app.app_name|lower %}active{% endif %}"
+            href="{% url app.app_link %}">{{ app.app_name }}</a>
         </li>
         {% endfor %}
+
 
       </ul>
     </div>

@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.db.models.functions import ExtractYear, ExtractMonth
 from django.db.models import Sum, Count
+from django.core.paginator import Paginator
 
 
 from django.db.models import Min, Max
@@ -24,6 +25,11 @@ def index(request):
 
 def salesperson_view(request):
     data = Salesperson.objects.all()
+    paginator = Paginator(data, 50)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+
+
     if data:
         error = ""
         msg = "Retrieve data successfully"
@@ -35,7 +41,7 @@ def salesperson_view(request):
     return render(request, "core/salesperson.html", {
         "error": error,
         "msg": msg,
-        "data": data,
+        "data": page,
         "apps_link": get_apps_link()
     }, status=status_code)
 

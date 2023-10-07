@@ -1,79 +1,54 @@
 {% extends 'core/base.html' %} {% block content %}
 
-<h3>Filter</h3>
+<h2></h2>
 
+<form class="row g-3 justify-content-center" method="POST">
+  {% csrf_token %}
+  <div class="col-sm-2">
+    <input name="start_date" class="form-control" type="date" {% if start_date %} value={{ start_date }}
+      {% elif oldest_date %} value={{ oldest_date }} {% endif %} {% if oldest_date %} min={{ oldest_date }} {% endif %}
+      {% if nearest_date %} max={{ nearest_date }} {% endif %} />
 
-  <form class="row g-3 justify-content-center" method="POST">
-    {% csrf_token %}
-    <div class="col-sm-2">
-      <input name="start_date" class="form-control" type="date" 
+    <label class="form-label text-muted">Start Date</label>
+  </div>
+  <div class="col-sm-2">
 
-      {% if start_date %}
-        value = {{ start_date }}
-      {% elif oldest_date %}
-        value = {{ oldest_date }}
-      {% endif %}
+    <input name="end_date" class="form-control" type="date" {% if end_date %} value={{ end_date }}
+      {% elif nearest_date %} value={{ nearest_date }} {% endif %} {% if oldest_date %} min={{ oldest_date }}
+      {% endif %} {% if nearest_date %} max={{ nearest_date }} {% endif %} />
 
-      {% if oldest_date %}
-        min = {{ oldest_date }}
-      {% endif %}
-      {% if nearest_date %}
-        max = {{ nearest_date }}
-      {% endif %}
+    <label class="form-label text-muted">End Date</label>
+  </div>
+  <div class="col-sm-2">
+    <button type="submit" class="btn btn-primary">Apply</button>
+    <button type="clear" class="btn btn-danger">Clear</button>
+  </div>
+</form>
 
-      />
-
-      <label class="form-label text-muted">Start Date</label>
-    </div>
-    <div class="col-sm-2">
-      
-      <input name="end_date" class="form-control" type="date" 
-      
-      {% if end_date %}
-        value = {{ end_date }}
-      {% elif nearest_date %}
-        value = {{ nearest_date }}
-      {% endif %}
-
-      {% if oldest_date %}
-        min = {{ oldest_date }}
-      {% endif %}
-      {% if nearest_date %}
-        max = {{ nearest_date }}
-      {% endif %}
-
-      />
-
-      <label class="form-label text-muted">End Date</label>
-    </div>
-    <div class="col-sm-2">
-      <button type="submit" class="btn btn-primary">Apply</button>
-      <button type="clear" class="btn btn-danger">Clear</button>
-    </div>
-  </form>
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Product</th>
-        <th scope="col">Sales Person</th>
-        <th scope="col">Customer</th>
-        <th scope="col">Sales Date</th>
-        <th scope="col">Price</th>
-        <th scope="col">Commission</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in data %}
-        <tr>
-          <td>{{ item.product.name }}</td>
-          <td>{{ item.salesperson.first_name }} {{ item.salesperson.last_name }}</td>
-          <td>{{ item.customer.first_name }} {{ item.customer.last_name }}</td>
-          <td>{{ item.sales_date }}</td>
-          <td>{{ item.price }}</td>
-          <td>{{ item.salesperson_commission }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Product</th>
+      <th scope="col">Sales Person</th>
+      <th scope="col">Salesperson #</th>
+      <th scope="col">Customer</th>
+      <th scope="col">Sales Date</th>
+      <th scope="col">Price</th>
+      <th scope="col">Commission</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in data %}
+    <tr>
+      <td>{{ item.product.name }}</td>
+      <td>{{ item.salesperson.first_name }} {{ item.salesperson.last_name }}</td>
+      <td>{{ item.salesperson.phone }}</td>
+      <td>{{ item.customer.first_name }} {{ item.customer.last_name }}</td>
+      <td>{{ item.sales_date }}</td>
+      <td>{{ item.price }}</td>
+      <td>{{ item.salesperson_commission }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
