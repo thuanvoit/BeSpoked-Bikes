@@ -2,10 +2,10 @@
 
 <h3>Filter</h3>
 
-  <form method="POST" class="row g-3">
+
+  <form class="row g-3 justify-content-center" method="POST">
     {% csrf_token %}
-    <div class="col-2">
-      <label class="form-label">Start Date</label>
+    <div class="col-sm-2">
       <input name="start_date" class="form-control" type="date" 
 
       {% if start_date %}
@@ -23,9 +23,10 @@
 
       />
 
+      <label class="form-label text-muted">Start Date</label>
     </div>
-    <div class="col-2">
-      <label class="form-label">End Date</label>
+    <div class="col-sm-2">
+      
       <input name="end_date" class="form-control" type="date" 
       
       {% if end_date %}
@@ -43,8 +44,9 @@
 
       />
 
+      <label class="form-label text-muted">End Date</label>
     </div>
-    <div class="col-12">
+    <div class="col-sm-2">
       <button type="submit" class="btn btn-primary">Apply</button>
       <button type="clear" class="btn btn-danger">Clear</button>
     </div>
