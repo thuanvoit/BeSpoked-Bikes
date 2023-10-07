@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
 from .forms import *
+from django.shortcuts import get_object_or_404
 
 from django.db.models import Min, Max
 from .utils import *
@@ -97,8 +98,13 @@ def create_sale(request):
         sales_date = format_date(request.POST.get('sales_date'))
         price = request.POST.get('price')
         salesperson_commission = request.POST.get('salesperson_commission')
-        print(product, salesperson, customer, sales_date, price, salesperson_commission)
-        new_sale = Sale(product,salesperson,customer,sales_date,price,salesperson_commission)
+        
+        new_sale = Sale(product=product,
+                        salesperson=salesperson,
+                        customer=customer,
+                        sales_date=sales_date,
+                        price=price,
+                        salesperson_commission=salesperson_commission)
         new_sale.save()
     
     return render(request, "core/sale_create.html", {
