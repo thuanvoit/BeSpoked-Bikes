@@ -4,7 +4,7 @@ from .settings import BASE_DIR
 
 
 
-SECRET_KEY = os.environ.get('SECRET')
+SECRET_KEY = 'django-insecure-cx(rqcggbl*%_zk3_#x+!_je_a-kpztrr1%4^yzz%$&g0+-(!-'
 print(f"SECRET_KEY: {SECRET_KEY}")
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME'], 'bespoked-bikes.azurewebsites.net', 'www.bespoked-bikes.azurewebsites.net', '127.0.0.1', '000.00.00.00']
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
