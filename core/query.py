@@ -59,12 +59,13 @@ query_sale_report_quarterly = """
                 sp.phone as phone, ROUND(SUM(s.price)) AS revenue, 
                 ROUND(SUM(s.salesperson_commission), 2) AS commission, 
                 COUNT(s.product_id) AS total_product, s.sales_date, 
-                (cast(strftime('%%m', s.sales_date) as integer) + 2) / 3 as quarter,
-                (cast(strftime('%%Y', s.sales_date) as integer)) as year
-                
+                (EXTRACT(QUARTER FROM s.sales_date)) as quarter,
+                (EXTRACT(YEAR FROM s.sales_date)) as year
+                            
             FROM core_salesperson AS sp 
             LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
-            
-            WHERE year = %s AND quarter = %s
-            GROUP BY sp.id;
+                        
+            WHERE (EXTRACT(YEAR FROM s.sales_date) = %s) AND (EXTRACT(QUARTER FROM s.sales_date) = %s)
+            GROUP BY sp.id, sp.first_name, sp.last_name, sp.phone, s.sales_date;
+
         """
