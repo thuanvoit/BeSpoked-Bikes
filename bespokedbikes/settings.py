@@ -32,11 +32,7 @@ ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net',
                  '169.254.129.5', 
                  '0.0.0.0', 
                  '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['bespoked-bikes.azurewebsites.net', 
-                        'www.bespoked-bikes.azurewebsites.net', 
-                        '169.254.129.5', 
-                        '0.0.0.0', 
-                        '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://bespoked-bikes.azurewebsites.net']
 
 # Application definition
 
