@@ -4,8 +4,16 @@ from .settings import BASE_DIR
 
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net', 'www.bespoked-bikes.azurewebsites.net', '127.0.0.1', '000.00.00.00']
-CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
+ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net', 
+                 'www.bespoked-bikes.azurewebsites.net', 
+                 '169.254.129.5', 
+                 '0.0.0.0', 
+                 '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['bespoked-bikes.azurewebsites.net', 
+                        'www.bespoked-bikes.azurewebsites.net', 
+                        '169.254.129.5', 
+                        '0.0.0.0', 
+                        '127.0.0.1']
 DEBUG = False
 
 # WhiteNoise configuration
