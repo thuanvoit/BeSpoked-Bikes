@@ -32,9 +32,11 @@ print(conn_str_params)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': conn_str_params['dbname'],
-        'HOST': conn_str_params['host'],
-        'USER': conn_str_params['user'],
-        'PASSWORD': conn_str_params['password'],
+        'NAME': 'bespoked-bikes-database',
+        'HOST': 'bespoked-bikes-server.postgres.database.azure.com',
+        'USER': 'vioushqhxy',
+        'PASSWORD': '3VVV3CN8285265XQ$',
+        'PORT': '5432',
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
