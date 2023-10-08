@@ -3,7 +3,7 @@ from .settings import *
 from .settings import BASE_DIR
 
 
-
+print("run deploy")
 SECRET_KEY = 'django-insecure-cx(rqcggbl*%_zk3_#x+!_je_a-kpztrr1%4^yzz%$&g0+-(!-'
 print(f"SECRET_KEY: {SECRET_KEY}")
 ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net', 'www.bespoked-bikes.azurewebsites.net', '127.0.0.1', '000.00.00.00']
@@ -28,6 +28,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
 conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')}
+print(conn_str_params)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
