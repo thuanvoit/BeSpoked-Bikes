@@ -13,3 +13,9 @@
     background-color: #6499E9;
     color: white;
 }
+
+@media (min-width: 300px) {
+    .image-container {
+        width: 100%; /* Adjust the max-width for medium and larger screens */
+    }
+}
