@@ -18,3 +18,16 @@ Simple sale tracking application.
 ``` bash
 pip install -r requirements.txt
 ```
+
+### Migration
+
+``` bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### Run
+
+``` bash
+python manage.py runserver
+```
