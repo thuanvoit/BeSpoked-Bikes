@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net', 'www.bespoked-bikes.azurewebsites.net', '127.0.0.1', '000.00.00.00']
 
 
 # Application definition
