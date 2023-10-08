@@ -1,27 +1,21 @@
 import json
-from django.db import IntegrityError, connection
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.db import IntegrityError
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import *
 from .forms import *
-from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
-from django.db.models.functions import ExtractYear, ExtractMonth
-from django.db.models import Sum, Count
+from django.db.models.functions import ExtractYear
 from django.core.paginator import Paginator
 from .query import *
-
 from django.db.models import Min, Max
 from .utils import *
-
 
 def index(request):
     return render(request, "core/apps.html", {
         "apps_link": get_apps_link()
     })
-
 
 def salesperson_view(request):
     data = Salesperson.objects.all()
@@ -29,20 +23,10 @@ def salesperson_view(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
-    if data:
-        error = ""
-        msg = "Retrieve data successfully"
-        status_code = 200
-    else:
-        error = "Error retrieve data"
-        msg = ""
-        status_code = 404
     return render(request, "core/salesperson.html", {
-        "error": error,
-        "msg": msg,
         "data": page,
         "apps_link": get_apps_link()
-    }, status=status_code)
+    })
 
 
 def salesperson_update(request, id):
@@ -69,20 +53,10 @@ def product_view(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     
-    if data:
-        error = ""
-        msg = "Retrieve data successfully"
-        status_code = 200
-    else:
-        error = "Error retrieve data"
-        msg = ""
-        status_code = 404
     return render(request, "core/product.html", {
-        "error": error,
-        "msg": msg,
         "data": page,
         "apps_link": get_apps_link()
-    }, status=status_code)
+    })
 
 
 def product_update(request, id):
@@ -188,9 +162,7 @@ def create_sale(request):
         new_sale.save()
         
         qty = int(product.qty_on_hand)
-        
         product.qty_on_hand = qty - 1
-        
         product.save()
             
         return redirect(reverse("core:sale"))
@@ -228,7 +200,6 @@ def sale_report(request):
         "stats": page
     })
 
-
 def seed_sample(request):
     clean_data()
     add_sample_data()
@@ -254,8 +225,10 @@ def customer_details(request):
         data_str = raw_data.decode('utf-8')
         data = json.loads(data_str)
         sales_date = data['sale_date']
+        print(sales_date)
         data = execute_custom_query(query_customer_by_sale_date, 
                                     [sales_date])
+
         return JsonResponse(data, status=200, safe=False)
     else:
         return JsonResponse({'error': 'Unsupported HTTP method'}, status=405)
@@ -267,8 +240,6 @@ def product_details(request):
         data_str = raw_data.decode('utf-8')
         data = json.loads(data_str)
         sales_date = data['sale_date']
-        
-        
         
         product = Product.objects.get(id=data['id'])
 
