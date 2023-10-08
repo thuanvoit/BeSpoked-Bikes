@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': 'bespoked-bikes-database',
         'HOST': 'bespoked-bikes-server.postgres.database.azure.com',
         'USER': 'vioushqhxy',
-        'PASSWORD': os.environ['DBPASS'],
+        'PASSWORD': os.environ.get('DBPASS'),
         'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'},
     }
