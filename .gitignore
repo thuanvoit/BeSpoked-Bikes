@@ -71,3 +71,8 @@ venv.bak/
 
 static/
 staticfiles/
+migrations/
+
+core/migrations/
+core/migrations/*
+
