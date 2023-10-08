@@ -74,7 +74,7 @@ def generate_100_products():
     for _ in range(100):
         name = "Product " + str(_)
         manufacturer = "Manufacturer " + str(_)
-        # You can customize this as needed
+        
         style = "Style " + str(random.randint(1, 10))
         purchase_price = round(random.uniform(10, 1000), 2)
         sale_price = round(purchase_price * random.uniform(1.1, 2.0), 2)
@@ -198,11 +198,9 @@ def generate_sample_sales():
         salesperson = random.choice(salespeople)
         customer = random.choice(customers)
 
-        # Get the salesperson's start_date
         start_date = salesperson.start_date
         termination_date = salesperson.termination_date
 
-        # Generate a random sales date within the range of start_date to today
         today = datetime.date.today()
         delta_days = (today - start_date).days
 
@@ -213,7 +211,6 @@ def generate_sample_sales():
             sales_date = start_date + \
                 datetime.timedelta(days=random.randint(0, delta_days))
 
-        # Generate a random sale price and salesperson commission
 
         discounts = Discount.objects.filter(
             product=product,
@@ -245,17 +242,16 @@ def generate_sample_sales():
         )
         sale.save()
 
-
 def generate_discounts_for_products():
     today = datetime.date.today()
     products = Product.objects.all()
 
     for product in products:
         for _ in range(random.randint(0, 2)):
-            # Random start date within the last 5 years
+            
             start_date = today - \
                 datetime.timedelta(days=random.randint(0, 5 * 365))
-            # Random end date within the next 3 months
+            
             end_date = start_date + \
                 datetime.timedelta(days=random.randint(1, 90))
             discount_percentage = random.choice([5, 10, 15, 20, 25, 30])
