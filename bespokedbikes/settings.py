@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dab28b3eb7a77'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug taurned on in production!
 DEBUG = True
@@ -88,6 +88,7 @@ WSGI_APPLICATION = 'bespokedbikes.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -95,7 +96,7 @@ DATABASES = {
         'HOST': os.environ.get('DBHOST'),
         'USER': os.environ.get('DBUSER'),
         'PASSWORD': os.environ.get('DBPASS'),
-        'PORT': '5433',
+        'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'},
     }
 }
