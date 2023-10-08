@@ -3,9 +3,7 @@ from .settings import *
 from .settings import BASE_DIR
 
 
-print("run deploy")
-SECRET_KEY = 'django-insecure-cx(rqcggbl*%_zk3_#x+!_je_a-kpztrr1%4^yzz%$&g0+-(!-'
-print(f"SECRET_KEY: {SECRET_KEY}")
+SECRET_KEY = os.environ.get('SECRET_KEY')
 ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net', 'www.bespoked-bikes.azurewebsites.net', '127.0.0.1', '000.00.00.00']
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 DEBUG = False
@@ -32,10 +30,10 @@ print(conn_str_params)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bespoked-bikes-database',
-        'HOST': 'bespoked-bikes-server.postgres.database.azure.com',
-        'USER': 'vioushqhxy',
-        'PASSWORD': os.environ['DBPASS'],
+        'NAME': os.environ.get('DBNAME'),
+        'HOST': os.environ.get('DBHOST'),
+        'USER': os.environ.get('DBUSER'),
+        'PASSWORD': os.environ.get('DBPASS'),
         'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'},
     }

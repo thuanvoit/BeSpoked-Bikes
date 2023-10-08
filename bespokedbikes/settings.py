@@ -22,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 print("run normal")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cx(rqcggbl*%_zk3_#x+!_je_a-kpztrr1%4^yzz%$&g0+-(!-'
-print(f"SECRET_KEY: {SECRET_KEY}")
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,9 +87,9 @@ WSGI_APPLICATION = 'bespokedbikes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bespoked-bikes-database',
-        'HOST': 'bespoked-bikes-server.postgres.database.azure.com',
-        'USER': 'vioushqhxy',
+        'NAME': os.environ.get('DBNAME'),
+        'HOST': os.environ.get('DBHOST'),
+        'USER': os.environ.get('DBUSER'),
         'PASSWORD': os.environ.get('DBPASS'),
         'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'},
