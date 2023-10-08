@@ -53,3 +53,18 @@ query_customer_by_sale_date = """
                 from core_customer as c
                 where c.start_date <= %s;
                         """
+
+query_sale_report_quarterly = """
+            SELECT sp.id AS salesperson_id, sp.first_name, sp.last_name, 
+                sp.phone as phone, ROUND(SUM(s.price)) AS revenue, 
+                ROUND(SUM(s.salesperson_commission), 2) AS commission, 
+                COUNT(s.product_id) AS total_product, s.sales_date, 
+                (cast(strftime('%%m', s.sales_date) as integer) + 2) / 3 as quarter,
+                (cast(strftime('%%Y', s.sales_date) as integer)) as year
+                
+            FROM core_salesperson AS sp 
+            LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
+            
+            WHERE year = %s AND quarter = %s
+            GROUP BY sp.id;
+        """

@@ -156,7 +156,7 @@ def create_sale(request):
     customers = []
 
     if request.method == 'POST':
-        print(request.POST)
+        
         product = Product.objects.get(id=request.POST.get('product'))
         salesperson = Salesperson.objects.get(id=request.POST.get('salesperson'))
         customer = Customer.objects.get(id=request.POST.get('customer'))
@@ -188,9 +188,9 @@ def create_sale(request):
         new_sale.save()
         
         qty = int(product.qty_on_hand)
-        print(product.qty_on_hand)
+        
         product.qty_on_hand = qty - 1
-        print(product.qty_on_hand)
+        
         product.save()
             
         return redirect(reverse("core:sale"))
@@ -216,28 +216,7 @@ def sale_report(request):
         year = int(request.POST.get('year'))
         quarter = int(request.POST.get('quarter'))
         
-        print(year, quarter)
-
-        query = """
-            SELECT sp.id AS salesperson_id, sp.first_name, sp.last_name, 
-                sp.phone as phone, ROUND(SUM(s.price)) AS revenue, 
-                ROUND(SUM(s.salesperson_commission), 2) AS commission, 
-                COUNT(s.product_id) AS total_product, s.sales_date, 
-                (cast(strftime('%%m', s.sales_date) as integer) + 2) / 3 as quarter,
-                (cast(strftime('%%Y', s.sales_date) as integer)) as year
-                
-            FROM core_salesperson AS sp 
-            LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
-            
-            WHERE year = %s AND quarter = %s
-            GROUP BY sp.id;
-        """
-
-        # Execute the raw SQL query
-        with connection.cursor() as cursor:
-            cursor.execute(query, [year, quarter])
-            stats = cursor.fetchall()
-            cursor.close()
+        stats = execute_custom_query(query_sale_report_quarterly, [year, quarter])
 
     paginator = Paginator(stats, 50)
     page_number = request.GET.get('page')
@@ -289,7 +268,7 @@ def product_details(request):
         data = json.loads(data_str)
         sales_date = data['sale_date']
         
-        print(sales_date, data['id'])
+        
         
         product = Product.objects.get(id=data['id'])
 
