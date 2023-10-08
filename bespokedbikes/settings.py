@@ -27,7 +27,7 @@ print(f"SECRET_KEY: {SECRET_KEY}")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net']
+ALLOWED_HOSTS = ['bespoked-bikes.azurewebsites.net', 'www.bespoked-bikes.azurewebsites.net', '169.254.129.5', '0.0.0.0']
 
 
 # Application definition
