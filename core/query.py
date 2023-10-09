@@ -59,7 +59,7 @@ query_sale_report_quarterly = """
                 sp.first_name, 
                 sp.last_name, 
                 sp.phone as phone, 
-                ROUND(SUM(s.price)) AS revenue, 
+                ROUND(SUM(s.price), 2) AS revenue, 
                 ROUND(SUM(s.salesperson_commission), 2) AS commission, 
                 COUNT(s.product_id) AS total_product
                             
