@@ -66,6 +66,6 @@ query_sale_report_quarterly = """
             LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
                         
             WHERE (EXTRACT(YEAR FROM s.sales_date) = %s) AND (EXTRACT(QUARTER FROM s.sales_date) = %s)
-            GROUP BY sp.id, sp.first_name, sp.last_name, sp.phone, s.sales_date;
+            GROUP BY sp.id, sp.first_name, sp.last_name, sp.phone;
 
         """
