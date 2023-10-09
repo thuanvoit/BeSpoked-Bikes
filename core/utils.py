@@ -134,13 +134,29 @@ def add_small_data():
             price=200.00,
             salesperson_commission=0,
         )
-    sale.save()
+        sale.save()
     
     discount = Discount(
                 product=Product.objects.all()[0],
                 begin_date='2020-03-01',
-                end_date='2020-03-31',
+                end_date='2020-03-15',
                 discount_percentage=10.00,
+            )
+    discount.save()
+    
+    discount = Discount(
+                product=Product.objects.all()[1],
+                begin_date='2020-03-01',
+                end_date='2020-03-31',
+                discount_percentage=5.00,
+            )
+    discount.save()
+    
+    discount = Discount(
+                product=Product.objects.all()[1],
+                begin_date='2020-01-01',
+                end_date='2020-01-31',
+                discount_percentage=15.00,
             )
     discount.save()
 
