@@ -8,6 +8,7 @@ def execute_custom_query(query, params=None):
     with connection.cursor() as cursor:
         cursor.execute(query, params)
         data = cursor.fetchall()
+        print(data)
     return data
 
 def format_date(date):
