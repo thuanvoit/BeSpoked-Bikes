@@ -55,10 +55,13 @@ query_customer_by_sale_date = """
                         """
 
 query_sale_report_quarterly = """
-            SELECT sp.id AS salesperson_id, sp.first_name, sp.last_name, 
-                sp.phone as phone, ROUND(SUM(s.price)) AS revenue, 
+            SELECT sp.id AS salesperson_id, 
+                sp.first_name, 
+                sp.last_name, 
+                sp.phone as phone, 
+                ROUND(SUM(s.price)) AS revenue, 
                 ROUND(SUM(s.salesperson_commission), 2) AS commission, 
-                COUNT(s.product_id) AS total_product, s.sales_date
+                COUNT(s.product_id) AS total_product
                             
             FROM core_salesperson AS sp 
             LEFT JOIN core_sale AS s ON s.salesperson_id = sp.id
