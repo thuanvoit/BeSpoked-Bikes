@@ -188,6 +188,8 @@ def sale_report(request):
         year = int(request.POST.get('year'))
         quarter = int(request.POST.get('quarter'))
         
+        report_title = f"{year} Report Q{quarter}"
+        
         stats = execute_custom_query(query_sale_report_quarterly, [year, quarter])
 
     paginator = Paginator(stats, 50)
@@ -197,7 +199,8 @@ def sale_report(request):
     return render(request, "core/sale_report.html", {
         "apps_link": get_apps_link(),
         "year_range": range(min_year, max_year + 1),
-        "stats": page
+        "stats": page,
+        "report_title": report_title
     })
 
 def seed_sample(request):
