@@ -30,6 +30,6 @@ urlpatterns = [
     
     # samples
     path('seed_sample/', views.seed_sample, name="seed_sample"),
-    
-    
+    path('small_sample/', views.small_sample, name="small_sample"),
+
 ]

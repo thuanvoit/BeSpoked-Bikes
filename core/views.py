@@ -177,6 +177,8 @@ def create_sale(request):
 
 def sale_report(request):
     stats = []
+    
+    report_title = ""
 
     year_range_query = Sale.objects.aggregate(min_year=Min(ExtractYear('sales_date')),
                                               max_year=Max(ExtractYear('sales_date')))
@@ -188,6 +190,8 @@ def sale_report(request):
         year = int(request.POST.get('year'))
         quarter = int(request.POST.get('quarter'))
         
+        report_title = f"{year} Report Q{quarter}"
+        
         stats = execute_custom_query(query_sale_report_quarterly, [year, quarter])
 
     paginator = Paginator(stats, 50)
@@ -197,12 +201,18 @@ def sale_report(request):
     return render(request, "core/sale_report.html", {
         "apps_link": get_apps_link(),
         "year_range": range(min_year, max_year + 1),
-        "stats": page
+        "stats": page,
+        "report_title": report_title
     })
 
 def seed_sample(request):
     clean_data()
     add_sample_data()
+    return HttpResponse("Feed data successfully.")
+
+def small_sample(request):
+    clean_data()
+    add_small_data()
     return HttpResponse("Feed data successfully.")
 
 @csrf_exempt

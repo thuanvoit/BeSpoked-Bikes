@@ -76,3 +76,4 @@ migrations/
 core/migrations/
 core/migrations/*
 
+.vscode

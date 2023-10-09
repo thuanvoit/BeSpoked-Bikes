@@ -1,6 +1,9 @@
 {% extends "core/base.html" %} {% block content %}
 {% load static %}
 
+{% if report_title != "" %}
+<h3>{{ report_title }}</h3>
+{% endif %}
 
 <form class="row g-3 justify-content-center" method="POST">
   {% csrf_token %}
@@ -39,7 +42,7 @@
       <th scope="col">Revenue Price ($)</th>
       <th scope="col">Commission ($)</th>
       <th scope="col">Total Product</th>
-      <th scope="col">Sale Date</th>
+      {% comment %} <th scope="col">Sale Date</th> {% endcomment %}
     </tr>
   </thead>
   <tbody>
@@ -52,7 +55,6 @@
       <td>{{ item.4 }}</td>
       <td>{{ item.5 }}</td>
       <td>{{ item.6 }}</td>
-      <td>{{ item.7 }}</td>
       {% comment %} <td>{{ item.8 }}</td> {% endcomment %}
     </tr>
 
