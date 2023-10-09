@@ -125,16 +125,6 @@ def add_small_data():
             manager="M1"
         )
     sp.save()
-    for i in range(1, 13):
-        sale = Sale(
-            product=Product.objects.all()[i%2],
-            salesperson=Salesperson.objects.all()[(i+1)%2],
-            customer=Customer.objects.all()[i%2],
-            sales_date=f'2020-{i}-02',
-            price=200.00,
-            salesperson_commission=0,
-        )
-        sale.save()
     
     discount = Discount(
                 product=Product.objects.all()[0],
@@ -159,6 +149,39 @@ def add_small_data():
                 discount_percentage=15.00,
             )
     discount.save()
+    
+    for i in range(1, 13):
+        product = Product.objects.all()[i%2]
+        salesperson = Salesperson.objects.all()[(i+1)%2]
+        customer = Customer.objects.all()[i%2]
+        
+        sales_date = f'2020-{i}-02'
+        
+        discounts = Discount.objects.filter(
+            product=product,
+            begin_date__lte=sales_date,
+            end_date__gte=sales_date,
+        )
+        max_discount = discounts.order_by('-discount_percentage').first()
+
+        if discounts:
+            product_price = sale_calculate(product.sale_price,
+                                           max_discount.discount_percentage,
+                                           product.commission_percentage)
+        else:
+            product_price = sale_calculate(product.sale_price,
+                                           0,
+                                           product.commission_percentage)
+
+        new_sale = Sale(product=product,
+                        salesperson=salesperson,
+                        customer=customer,
+                        sales_date=sales_date,
+                        price=product_price["sale_price"],
+                        salesperson_commission=product_price["commission"])
+        
+        new_sale.save()
+    
 
 
 def generate_100_products():
