@@ -8,6 +8,7 @@ def execute_custom_query(query, params=None):
     with connection.cursor() as cursor:
         cursor.execute(query, params)
         data = cursor.fetchall()
+        print(data)
     return data
 
 def format_date(date):
@@ -44,6 +45,8 @@ def get_apps_link():
             "app_info": "Quarterly report"},
         {"app_name": "Sample", "app_link": "core:seed_sample",
             "app_info": "Seed Random Data"},
+        {"app_name": "Small Sample", "app_link": "core:small_sample",
+            "app_info": "Seed Small Sample Data"},
     ]
     return apps_link
 
@@ -68,6 +71,69 @@ def add_sample_data():
     generate_50_salesperson_terminated()
     generate_discounts_for_products()
     generate_sample_sales()
+    
+def add_small_data():
+    p = Product(
+            name="P1",
+            manufacturer="M1",
+            style="S1",
+            purchase_price=100,
+            sale_price=200,
+            qty_on_hand=10,
+            commission_percentage=10)
+    p.save()
+    p = Product(
+            name="P2",
+            manufacturer="M1",
+            style="S1",
+            purchase_price=200,
+            sale_price=250,
+            qty_on_hand=50,
+            commission_percentage=5)
+    p.save()
+    c = Customer(
+            first_name="C1",
+            last_name="L1",
+            address="A",
+            phone="404",
+            start_date='2019-01-01'
+        )
+    c.save()
+    c = Customer(
+            first_name="C2",
+            last_name="L1",
+            address="A",
+            phone="405",
+            start_date='2019-01-01'
+        )
+    c.save()
+    sp = Salesperson(
+            first_name="FN1",
+            last_name="LN1",
+            address="A",
+            phone="406",
+            start_date='2019-01-01',
+            manager="M1"
+        )
+    sp.save()
+    sp = Salesperson(
+            first_name="FN2",
+            last_name="LN1",
+            address="A",
+            phone="407",
+            start_date='2019-01-01',
+            manager="M1"
+        )
+    sp.save()
+    sale = Sale(
+            product=Product.objects.all()[0],
+            salesperson=Salesperson.objects.all()[0],
+            customer=Customer.objects.all()[0],
+            sales_date='2020-01-01',
+            price=200,
+            salesperson_commission=0,
+        )
+    sale.save()
 
 
 def generate_100_products():

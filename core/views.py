@@ -205,6 +205,11 @@ def seed_sample(request):
     add_sample_data()
     return HttpResponse("Feed data successfully.")
 
+def small_sample(request):
+    clean_data()
+    add_small_data()
+    return HttpResponse("Feed data successfully.")
+
 @csrf_exempt
 def saler_details(request):
     if request.method == 'POST':
