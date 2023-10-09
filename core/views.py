@@ -177,6 +177,8 @@ def create_sale(request):
 
 def sale_report(request):
     stats = []
+    
+    report_title = ""
 
     year_range_query = Sale.objects.aggregate(min_year=Min(ExtractYear('sales_date')),
                                               max_year=Max(ExtractYear('sales_date')))
